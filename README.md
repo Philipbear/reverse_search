@@ -1,1 +1,1 @@
-# reverse_MSMS_matching
+# reverse MS/MS spectral matching
