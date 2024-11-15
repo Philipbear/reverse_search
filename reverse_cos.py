@@ -11,8 +11,8 @@ logger = logging.getLogger("matchms")
 
 class ReverseCosine(BaseSimilarity):
     """
-    Calculate 'modified reverse cosine score' between mass spectra.
-    reference spectrum goes first, query spectrum goes second.
+    Calculate 'reverse cosine score' between mass spectra.
+    query spectrum goes first, reference spectrum goes second.
     """
     # Set key characteristics as class attributes
     is_commutative = False
@@ -38,7 +38,7 @@ class ReverseCosine(BaseSimilarity):
         self.intensity_power = intensity_power
 
     def pair(self, query: SpectrumType, reference: SpectrumType):
-        """Calculate modified cosine score between two spectra.
+        """Calculate reverse cosine score between two spectra.
 
         Parameters
         ----------
@@ -79,7 +79,6 @@ class ReverseCosine(BaseSimilarity):
 def collect_peak_pairs_reverse(spec1: np.ndarray, spec2: np.ndarray,
                                tolerance: float, shift: float = 0, mz_power: float = 0.0,
                                intensity_power: float = 1.0):
-    # pylint: disable=too-many-arguments
     """Find matching pairs between two spectra.
 
     Args
