@@ -1,5 +1,4 @@
 import logging
-from typing import Tuple
 
 import numpy as np
 from matchms.similarity.BaseSimilarity import BaseSimilarity
@@ -9,7 +8,7 @@ from matchms.typing import SpectrumType
 logger = logging.getLogger("matchms")
 
 
-class ReverseCosine(BaseSimilarity):
+class ReverseCosineGreedy(BaseSimilarity):
     """
     Calculate 'reverse cosine score' between mass spectra.
     query spectrum goes first, reference spectrum goes second.
@@ -161,7 +160,7 @@ if __name__ == "__main__":
                           intensities=np.array([0.4, 0.2, 0.1, 0.5]),
                           metadata={"precursor_mz": 205.0})
 
-    reverse_cosine = ReverseCosine(tolerance=0.05, mz_power=0.0, intensity_power=1.0)
+    reverse_cosine = ReverseCosineGreedy(tolerance=0.05, mz_power=0.0, intensity_power=1.0)
     score, matched_peak = reverse_cosine.pair(spectrum_1, spectrum_2)  # query, reference
 
     print(score, matched_peak)
