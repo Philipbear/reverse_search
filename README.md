@@ -2,7 +2,7 @@
 
 This is the repository for the reverse MS/MS spectral matching project.
 
-## Source codes for reverse MS/MS spectral matching
+## Source codes for reverse MS/MS matching
 - reverse cosine similarity: [`reverse_cosine.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_search/reverse_cos.py)
 - reverse entropy similarity: [`reverse_entropy.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_search/reverse_entropy.py)
 
@@ -13,4 +13,4 @@ This is the repository for the reverse MS/MS spectral matching project.
 
 ## Citation
 
-> Shipei Xing, Vincent Charron-Lamoureux, Yasin El Abiead, Pieter C. Dorrestein. ....
+> Shipei Xing, Yasin El Abiead, Pieter C. Dorrestein. ....
