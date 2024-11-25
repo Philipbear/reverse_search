@@ -56,7 +56,7 @@ def find_matches(ref_spec_mz: np.ndarray, qry_spec_mz: np.ndarray,
 
 
 @nb.njit
-def collect_peak_pairs(ref_spec: np.ndarray, qry_spec: np.ndarray, min_matched_peak: int,
+def collect_peak_pairs(ref_spec: np.ndarray, qry_spec: np.ndarray, min_matched_peak: int, sqrt_transform: bool,
                        tolerance: float, shift: float = 0.0) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Find and score matching peak pairs between spectra."""
     if len(ref_spec) == 0 or len(qry_spec) == 0:
@@ -69,7 +69,10 @@ def collect_peak_pairs(ref_spec: np.ndarray, qry_spec: np.ndarray, min_matched_p
         return np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.float32)
 
     # Calculate scores for matches
-    scores = (ref_spec[matches_idx1, 1] + qry_spec[matches_idx2, 1]).astype(np.float32)
+    if sqrt_transform:
+        scores = (np.sqrt(ref_spec[matches_idx1, 1]) + np.sqrt(qry_spec[matches_idx2, 1])).astype(np.float32)
+    else:
+        scores = (ref_spec[matches_idx1, 1] + qry_spec[matches_idx2, 1]).astype(np.float32)
 
     # Sort by score descending
     sort_idx = np.argsort(-scores)
@@ -79,7 +82,7 @@ def collect_peak_pairs(ref_spec: np.ndarray, qry_spec: np.ndarray, min_matched_p
 @nb.njit
 def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
                   scores: np.ndarray, ref_spec: np.ndarray,
-                  qry_spec: np.ndarray, reverse: bool) -> Tuple[float, int]:
+                  qry_spec: np.ndarray, sqrt_transform: bool, reverse: bool):
     """Calculate entropy similarity score from matching peaks."""
 
     # Apply weight to intensity
@@ -108,21 +111,35 @@ def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
             used_matches += 1
 
     if used_matches == 0:
-        return 0.0, 0
+        return 0.0, 0, 0.0
 
     # Trim arrays to used matches only
     matched_a_intensities = matched_a_intensities[:used_matches]
     matched_b_intensities = matched_b_intensities[:used_matches]
 
+    spec_usage = np.sum(matched_b_intensities) / np.sum(qry_spec[:, 1])  # spec usage before potential sqrt transform
+
     # Normalize intensities
-    sum_a = np.sum(ref_spec[:, 1])
-    if reverse:
-        sum_b = np.sum(matched_b_intensities)
+    if sqrt_transform:
+        matched_a_intensities = np.sqrt(matched_a_intensities)
+        matched_b_intensities = np.sqrt(matched_b_intensities)
+        sum_a = np.sum(np.sqrt(ref_spec[:, 1]))
     else:
-        sum_b = np.sum(qry_spec[:, 1])
+        sum_a = np.sum(ref_spec[:, 1])
+
+    if reverse:
+        if sqrt_transform:
+            sum_b = np.sum(np.sqrt(matched_b_intensities))
+        else:
+            sum_b = np.sum(matched_b_intensities)
+    else:
+        if sqrt_transform:
+            sum_b = np.sum(np.sqrt(qry_spec[:, 1]))
+        else:
+            sum_b = np.sum(qry_spec[:, 1])
 
     if sum_a <= 0 or sum_b <= 0:
-        return 0.0, used_matches
+        return 0.0, used_matches, 0.0
 
     matched_a_intensities /= sum_a
     matched_b_intensities /= sum_b
@@ -144,7 +161,7 @@ def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
             entropy_sim -= matched_b_intensities[i] * np.log2(matched_b_intensities[i])
 
     entropy_sim /= 2
-    return min(float(entropy_sim), 1.0), used_matches
+    return min(float(entropy_sim), 1.0), used_matches, spec_usage
 
 
 @nb.njit
@@ -189,27 +206,28 @@ class EntropyGreedy:
     def pair(self, qry_spec, ref_spec,
              min_matched_peak: int = 1,
              analog_search: bool = False,
-             shift: float = 0.0) -> Tuple[float, int]:
+             sqrt_transform: bool = False,
+             shift: float = 0.0):
         """Calculate similarity between two spectra."""
 
         if qry_spec.size == 0 or ref_spec.size == 0:
-            return 0.0, 0
+            return 0.0, 0, 0.0
 
         # normalize the intensity
         ref_spec[:, 1] /= np.sum(ref_spec[:, 1])
         qry_spec[:, 1] /= np.sum(qry_spec[:, 1])
 
         matches_idx1, matches_idx2, scores = collect_peak_pairs(
-            ref_spec, qry_spec, min_matched_peak,
+            ref_spec, qry_spec, min_matched_peak, sqrt_transform,
             self.tolerance, shift
         )
 
         if len(matches_idx1) == 0:
-            return 0.0, 0
+            return 0.0, 0, 0.0
 
         return score_matches(
             matches_idx1, matches_idx2, scores,
-            ref_spec, qry_spec, self.reverse
+            ref_spec, qry_spec, sqrt_transform, self.reverse
         )
 
 
@@ -218,12 +236,12 @@ if __name__ == "__main__":
 
     spectrum_2 = np.array([[41, 38.0], [69, 66.0], [86, 999.0]], dtype=np.float32)
 
-    # Example with reverse=False
-    eng = EntropyGreedy(tolerance=0.05, reverse=False)
-    score_standard, n_matches_standard = eng.pair(spectrum_1, spectrum_2)
-    print(f"Standard Score: {score_standard:.3f}, Matches: {n_matches_standard}")
+    # Example with reverse=False (forward entropy)
+    entropy_standard = EntropyGreedy(tolerance=0.05, reverse=False)
+    score, n_matches, spec_usage = entropy_standard.pair(spectrum_1, spectrum_2)
+    print(f"Standard Score: {score:.3f}, Matches: {n_matches}, Spec Usage: {spec_usage}")
 
-    # Example with reverse=True
-    eng = EntropyGreedy(tolerance=0.05, reverse=True)
-    score_reverse, n_matches_reverse = eng.pair(spectrum_1, spectrum_2)
-    print(f"Reverse Score: {score_reverse:.3f}, Matches: {n_matches_reverse}")
+    # Example with reverse=True (reverse entropy)
+    entropy_reverse = EntropyGreedy(tolerance=0.05, reverse=True)
+    score, n_matches, spec_usage = entropy_reverse.pair(spectrum_1, spectrum_2)
+    print(f"Reverse Score: {score:.3f}, Matches: {n_matches}, Spec Usage: {spec_usage}")

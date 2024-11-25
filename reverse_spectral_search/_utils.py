@@ -1,33 +1,38 @@
-"""
-This file contains code modified from the MSEntropy project
-(https://github.com/YuanyueLi/MSEntropy)
-Copyright Yuanyue Li 2023
-
-Modified by Shipei Xing in 2024
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
+from dataclasses import dataclass
 
 import numpy as np
 from numba import njit
 
 
+@dataclass
+class Spectrum:
+    """
+    A class to represent a mass spectrum with its associated metadata.
+    """
+    scan: object
+    precursor_mz: float
+    rt: float
+    charge: object
+    tic: float
+    peaks: np.ndarray
+    peaks_cleaned: bool = False
+
+    # cleaned_peaks: np.ndarray = None
+
+    def __post_init__(self):
+        """Validate peaks data"""
+        assert self.peaks.ndim == 2, "Peaks must be 2D array"
+        assert self.peaks.shape[1] == 2, "Peaks must have shape (n, 2) for (mz, intensity)"
+
+        # Ensure float32 type
+        self.peaks = np.asarray(self.peaks, dtype=np.float32)
+
+
 @njit
 def clean_peaks(peaks: np.ndarray,
                 prec_mz: float,
-                rel_int_threshold: float = 0.0,
+                rel_int_threshold: float = 0.01,
                 prec_mz_removal_da: float = 1.5,
-                peak_transformation: str = 'sqrt',
                 max_peak_num: int = 50):
     """
     Clean MS/MS peaks
@@ -58,9 +63,5 @@ def clean_peaks(peaks: np.ndarray,
 
     # Sort peaks by m/z
     peaks = peaks[np.argsort(peaks[:, 0])]
-
-    # Transform peak intensities
-    if peak_transformation == 'sqrt':
-        peaks[:, 1] = np.sqrt(peaks[:, 1])
 
     return np.asarray(peaks, dtype=np.float32)
