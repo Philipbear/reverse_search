@@ -31,7 +31,7 @@ class Spectrum:
 @njit
 def clean_peaks(peaks: np.ndarray,
                 prec_mz: float,
-                rel_int_threshold: float = 0.01,
+                rel_int_threshold: float = 0.0,
                 prec_mz_removal_da: float = 1.5,
                 max_peak_num: int = 50):
     """
