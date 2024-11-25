@@ -1,10 +1,7 @@
 """
-This file contains code modified from the matchms project and MSEntropy project
+This file contains code modified from the matchms project
 (https://github.com/matchms/matchms)
 Copyright matchms Team 2020
-
-(https://github.com/YuanyueLi/MSEntropy)
-Copyright Yuanyue Li 2023
 
 Modified by Shipei Xing in 2024
 
