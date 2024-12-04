@@ -27,6 +27,7 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 ## Chimeric spectra analysis
 - [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
 
+<img src="fig/precursor_purity.svg" width="400"/>
 
 ## Citation
 > Shipei Xing, Yasin El Abiead, Haoqi Nina Zhao, Vincent Charron-Lamoureux, Mingxun Wang, Pieter C. Dorrestein. Reverse spectral search: a simple but overlooked solution for chimeric spectra in metabolite annotation. To be preprinted.
