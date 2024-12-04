@@ -2,9 +2,17 @@
 
 This is the repository for the reverse spectral search project.
 
-<div style="display: flex; gap: 20px; align-items: center;">
-  <img src="fig/workflow.svg" width="300"/>
-  <img src="fig/annotation_cos.svg" width="400"/>
+<div style="display: flex; gap: 20px; justify-content: center;">
+  <!-- Left column -->
+  <div style="flex: 1; display: flex; justify-content: center;">
+    <img src="fig/workflow.svg" width="300"/>
+  </div>
+  
+  <!-- Right column -->
+  <div style="flex: 1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
+    <img src="fig/fdr_cos_80_purity.svg" width="350"/>
+    <img src="fig/annotation_cos.svg" width="400"/>
+  </div>
 </div>
 
 
