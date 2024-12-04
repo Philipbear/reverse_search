@@ -2,6 +2,11 @@
 
 This is the repository for the reverse spectral search project.
 
+![](fig/workflow.svg)
+
+![](annotation/annotation_bar_cos.svg)
+
+
 ## Source codes for symmetric & reverse MS/MS matching
 - Cosine similarity: [`cosine.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/cosine.py)
 - Entropy similarity: [`entropy.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/entropy.py)
