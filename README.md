@@ -2,12 +2,12 @@
 
 This is the repository for the reverse spectral search project.
 
-<table style="border-collapse: collapse; border: none;">
-<tr style="border: none;">
-  <td width="40%" align="center" valign="center" style="border: none;">
+<table>
+<tr>
+  <td width="40%" align="center" valign="center">
     <img src="fig/workflow.svg" width="300"/>
   </td>
-  <td width="60%" align="center" style="border: none;">
+  <td width="60%" align="center">
     <img src="fig/fdr_cos_80_purity.svg" width="350"/>
     <br><br>
     <img src="fig/annotation_cos.svg" width="400"/>
