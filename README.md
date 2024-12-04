@@ -2,9 +2,9 @@
 
 This is the repository for the reverse spectral search project.
 
-![](fig/workflow.svg)
+<img src="fig/workflow.svg" width="200"/>
 
-![](annotation/annotation_bar_cos.svg)
+<img src="annotation/annotation_bar_cos.svg" width="400"/>
 
 
 ## Source codes for symmetric & reverse MS/MS matching
