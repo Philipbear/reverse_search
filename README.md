@@ -8,7 +8,7 @@ This is the repository for the reverse spectral search project.
     <img src="fig/workflow.svg" width="300"/>
   </td>
   <td width="60%" align="center">
-    <img src="fig/fdr_cos_80_purity.svg" width="400"/>
+    <img src="fig/fdr_cos_80_purity.svg" width="350"/>
     <br><br>
     <img src="fig/annotation_cos.svg" width="400"/>
   </td>
