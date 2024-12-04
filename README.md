@@ -2,6 +2,7 @@
 
 Chimeric spectra are ubiquitous in MS/MS data, which compromises the quality and reliability of MS/MS matching-based metabolite annotation.
 Reverse spectral search is a simple yet overlooked solution to chimeric spectra. 
+
 Here, we enhanced the reverse search by introducing a penalty factor to unmatched peaks, which substantially increases the number of spectral matches while maintaining rigorous quality control.
 
 <table>
