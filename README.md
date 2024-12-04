@@ -4,7 +4,7 @@ This is the repository for the reverse spectral search project.
 
 <table>
 <tr>
-  <td width="40%" align="center" valign="top">
+  <td width="40%" align="center" valign="center">
     <img src="fig/workflow.svg" width="300"/>
   </td>
   <td width="60%" align="center">
