@@ -2,18 +2,18 @@
 
 This is the repository for the reverse spectral search project.
 
-<div style="display: flex; gap: 20px; justify-content: center;">
-  <!-- Left column -->
-  <div style="flex: 1; display: flex; justify-content: center;">
+<table>
+<tr>
+  <td width="40%" align="center" valign="top">
     <img src="fig/workflow.svg" width="300"/>
-  </div>
-  
-  <!-- Right column -->
-  <div style="flex: 1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
-    <img src="fig/fdr_cos_80_purity.svg" width="350"/>
+  </td>
+  <td width="60%" align="center">
+    <img src="fig/fdr_cos_80_purity.svg" width="400"/>
+    <br><br>
     <img src="fig/annotation_cos.svg" width="400"/>
-  </div>
-</div>
+  </td>
+</tr>
+</table>
 
 
 ## Source codes for symmetric & reverse MS/MS matching
