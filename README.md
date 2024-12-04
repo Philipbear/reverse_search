@@ -1,14 +1,14 @@
 # Reverse MS/MS spectral search
 
-This is the repository for the reverse MS/MS spectral search project.
+This is the repository for the reverse spectral search project.
 
 ## Source codes for symmetric & reverse MS/MS matching
 - Cosine similarity: [`cosine.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/cosine.py)
 - Entropy similarity: [`entropy.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/entropy.py)
-- Bhattacharyya 1 similarity: [`bhattacharya1.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/bhattacharya1.py)
+- Bhattacharyya angle similarity: [`bhattacharya1.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/bhattacharya1.py)
 
 ## Chimeric spectra analysis
-- [`analyze_chimeric_spec.py.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/chimeric_spectra/analyze_chimeric_spec.py.py)
+- [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
 
 
 ## Citation
