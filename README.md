@@ -4,7 +4,7 @@ This is the repository for the reverse spectral search project.
 
 <img src="fig/workflow.svg" width="200"/>
 
-<img src="annotation/annotation_bar_cos.svg" width="400"/>
+<img src="fig/annotation_cos.svg" width="400"/>
 
 
 ## Source codes for symmetric & reverse MS/MS matching
