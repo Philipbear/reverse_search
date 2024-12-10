@@ -26,7 +26,7 @@ import numpy as np
 
 @nb.njit
 def find_matches(ref_spec_mz: np.ndarray, qry_spec_mz: np.ndarray,
-                 tolerance: float, shift: float = 0.0) -> Tuple[np.ndarray, np.ndarray]:
+                 tolerance: float) -> Tuple[np.ndarray, np.ndarray]:
     """Find matching peaks between two spectra."""
     matches_idx1 = np.empty(len(ref_spec_mz) * len(qry_spec_mz), dtype=np.int64)
     matches_idx2 = np.empty_like(matches_idx1)
@@ -39,7 +39,7 @@ def find_matches(ref_spec_mz: np.ndarray, qry_spec_mz: np.ndarray,
         high_bound = mz + tolerance
 
         for peak2_idx in range(lowest_idx, len(qry_spec_mz)):
-            mz2 = qry_spec_mz[peak2_idx] + shift
+            mz2 = qry_spec_mz[peak2_idx]
             if mz2 > high_bound:
                 break
             if mz2 < low_bound:
@@ -54,14 +54,14 @@ def find_matches(ref_spec_mz: np.ndarray, qry_spec_mz: np.ndarray,
 
 @nb.njit
 def collect_peak_pairs(ref_spec: np.ndarray, qry_spec: np.ndarray, min_matched_peak: int, sqrt_transform: bool,
-                       tolerance: float, shift: float = 0.0) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+                       tolerance: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Find and score matching peak pairs between spectra."""
 
     if len(ref_spec) == 0 or len(qry_spec) == 0:
         return np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.float32)
 
     # Extract m/z values
-    matches_idx1, matches_idx2 = find_matches(ref_spec[:, 0], qry_spec[:, 0], tolerance, shift)
+    matches_idx1, matches_idx2 = find_matches(ref_spec[:, 0], qry_spec[:, 0], tolerance)
 
     if len(matches_idx1) < min_matched_peak:
         return np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.float32)
@@ -80,7 +80,7 @@ def collect_peak_pairs(ref_spec: np.ndarray, qry_spec: np.ndarray, min_matched_p
 @nb.njit
 def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
                   scores: np.ndarray, ref_spec: np.ndarray, qry_spec: np.ndarray,
-                  sqrt_transform: bool, reverse: bool):
+                  sqrt_transform: bool, penalty: float):
     """Calculate final similarity score from matching peaks."""
 
     # Use boolean arrays for tracking used peaks - initialized to False
@@ -101,7 +101,7 @@ def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
             used_matches += 1
 
     if used_matches == 0:
-        return 0.0, 0, 0.0
+        return 0.0, 0
 
     # Calculate normalization factors
     if sqrt_transform:
@@ -111,94 +111,90 @@ def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
 
     # Sum intensities of matched peaks
     matched_intensities = np.zeros(used_matches, dtype=np.float32)
+    # new intensities of qry peaks, matched peaks are the same, others are penalized
+    new_qry_intensities = np.zeros(len(qry_spec), dtype=np.float32)
     match_idx = 0
     for i in range(len(qry_spec)):
         if used2[i]:
             matched_intensities[match_idx] = qry_spec[i, 1]
+            new_qry_intensities[i] = qry_spec[i, 1]
             match_idx += 1
+        else:
+            new_qry_intensities[i] = qry_spec[i, 1] * (1 - penalty)
 
-    if reverse:
-        if sqrt_transform:
-            norm2 = np.sqrt(np.sum(np.sqrt(matched_intensities * matched_intensities)))
-        else:
-            norm2 = np.sqrt(np.sum(matched_intensities * matched_intensities))
+    if sqrt_transform:
+        norm2 = np.sqrt(np.sum(np.sqrt(new_qry_intensities * new_qry_intensities)))
     else:
-        if sqrt_transform:
-            norm2 = np.sqrt(np.sum(np.sqrt(qry_spec[:, 1] * qry_spec[:, 1])))
-        else:
-            norm2 = np.sqrt(np.sum(qry_spec[:, 1] * qry_spec[:, 1]))
+        norm2 = np.sqrt(np.sum(new_qry_intensities * new_qry_intensities))
 
     if norm1 == 0.0 or norm2 == 0.0:
-        return 0.0, used_matches, 0.0
+        return 0.0, used_matches
 
     score = total_score / (norm1 * norm2)
 
-    spec_usage = np.sum(matched_intensities) / np.sum(qry_spec[:, 1])
-
-    return min(float(score), 1.0), used_matches, spec_usage
+    return min(float(score), 1.0), used_matches
 
 
-class CosineGreedy:
-    """Calculate cosine similarity between mass spectra."""
+def cosine_similarity(qry_spec: np.ndarray, ref_spec: np.ndarray,
+                      tolerance: float = 0.1,
+                      min_matched_peak: int = 1,
+                      sqrt_transform: bool = True,
+                      penalty: float = 0.):
+    """
+    Calculate similarity between two spectra.
 
-    def __init__(self, tolerance: float = 0.1, reverse: bool = False):
-        """Initialize with given parameters."""
-        self.tolerance = np.float32(tolerance)
-        self.reverse = reverse
+    Parameters
+    ----------
+    qry_spec: np.ndarray
+        Query spectrum.
+    ref_spec: np.ndarray
+        Reference spectrum.
+    tolerance: float
+        Tolerance for m/z matching.
+    min_matched_peak: int
+        Minimum number of matched peaks.
+    sqrt_transform: bool
+        If True, use square root transformation.
+    penalty: float
+        Penalty for unmatched peaks. If set to 0, traditional cosine score; if set to 1, traditional reverse cosine score.
+    """
+    tolerance = np.float32(tolerance)
+    penalty = np.float32(penalty)
 
-    def pair(self, qry_spec, ref_spec,
-             min_matched_peak: int = 1,
-             analog_search: bool = False,
-             sqrt_transform: bool = False,
-             shift: float = 0.0):
-        """
-        Calculate similarity between two spectra.
+    if qry_spec.size == 0 or ref_spec.size == 0:
+        return 0.0, 0
 
-        min_matched_peak: int, help for early stopping
-        """
+    # normalize the intensity
+    ref_spec[:, 1] /= np.max(ref_spec[:, 1])
+    qry_spec[:, 1] /= np.max(qry_spec[:, 1])
 
-        if qry_spec.size == 0 or ref_spec.size == 0:
-            return 0.0, 0, 0.0
+    matches_idx1, matches_idx2, scores = collect_peak_pairs(
+        ref_spec, qry_spec, min_matched_peak, sqrt_transform,
+        tolerance
+    )
 
-        # normalize the intensity
-        ref_spec[:, 1] /= np.max(ref_spec[:, 1])
-        qry_spec[:, 1] /= np.max(qry_spec[:, 1])
+    if len(matches_idx1) == 0:
+        return 0.0, 0
 
-        matches_idx1, matches_idx2, scores = collect_peak_pairs(
-            ref_spec, qry_spec, min_matched_peak, sqrt_transform,
-            self.tolerance, shift
-        )
-
-        if len(matches_idx1) == 0:
-            return 0.0, 0, 0.0
-
-        return score_matches(
-            matches_idx1, matches_idx2, scores,
-            ref_spec, qry_spec, sqrt_transform, self.reverse
-        )
+    return score_matches(
+        matches_idx1, matches_idx2, scores,
+        ref_spec, qry_spec, sqrt_transform, penalty
+    )
 
 
 if __name__ == "__main__":
-    peaks1 = np.array([
-        [100., 0.7],
-        [150., 0.2],
-        [200., 0.1],
-        [201., 0.2]
-    ], dtype=np.float32)
+    peaks1 = np.array([[69, 8.0], [86, 100.0], [99, 50.0]], dtype=np.float32)
 
-    peaks2 = np.array([
-        [105., 0.4],
-        [150., 0.2],
-        [190., 0.1],
-        [200., 0.5]
-    ], dtype=np.float32)
+    peaks2 = np.array([[41, 38.0], [69, 66.0], [86, 999.0]], dtype=np.float32)
 
-    # Example with reverse=False (cosine)
-    cosine_standard = CosineGreedy(tolerance=0.05, reverse=False)
-    score, n_matches, spec_usage = cosine_standard.pair(peaks1, peaks2)
-    print(f"Standard Score: {score:.3f}, Matches: {n_matches}, Spec Usage: {spec_usage}")
+    # Example with standard cosine
+    score, n_matches = cosine_similarity(peaks1, peaks2, tolerance=0.05, sqrt_transform=True, penalty=0)
+    print(f"Standard Score: {score:.3f}, Matches: {n_matches}")
 
-    # Example with reverse=True (reverse cosine)
-    cosine_reverse = CosineGreedy(tolerance=0.05, reverse=True)
-    score, n_matches, spec_usage = cosine_reverse.pair(peaks1, peaks2)
-    print(f"Reverse Score: {score:.3f}, Matches: {n_matches}, Spec Usage: {spec_usage}")
+    # Example with enhanced reverse cosine
+    score, n_matches = cosine_similarity(peaks1, peaks2, tolerance=0.05, sqrt_transform=True, penalty=0.6)
+    print(f"Reverse Score: {score:.3f}, Matches: {n_matches}")
+
+    # Example with traditional reverse cosine
+    score, n_matches = cosine_similarity(peaks1, peaks2, tolerance=0.05, sqrt_transform=True, penalty=1)
+    print(f"Reverse Score: {score:.3f}, Matches: {n_matches}")
