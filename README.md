@@ -5,13 +5,13 @@ Reverse spectral search is a simple yet overlooked solution to chimeric spectra.
 
 Here, we enhanced the reverse search by introducing a penalty factor to unmatched peaks, which substantially increases the number of spectral matches while maintaining rigorous quality control.
 
-<table>
+<table width="100%">
 <tr>
   <td width="40%" align="center" valign="center">
     <img src="fig/workflow.svg" width="300"/>
   </td>
   <td width="60%" align="center">
-    <img src="fig/chimera.svg" width="350"/>
+    <img src="fig/chimera.svg" width="300"/>
     <br><br>
     <img src="fig/annotation_cos.svg" width="400"/>
   </td>
