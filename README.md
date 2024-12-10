@@ -11,7 +11,7 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
     <img src="fig/workflow.svg" width="300"/>
   </td>
   <td width="60%" align="center">
-    <img src="fig/fdr_cos_80_purity.svg" width="350"/>
+    <img src="fig/chimera.svg" width="350"/>
     <br><br>
     <img src="fig/annotation_cos.svg" width="400"/>
   </td>
@@ -26,17 +26,6 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 
 ## Chimeric spectra analysis
 - [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
-
-<table>
-<tr>
-  <td width="50%" align="center" valign="center">
-    <img src="fig/chimera.svg" width="400" align="center"/>
-  </td>
-  <td width="50%" align="center">
-    <img src="fig/precursor_purity_cumulative.svg" width="400"/>
-  </td>
-</tr>
-</table>
 
 
 ## Citation
