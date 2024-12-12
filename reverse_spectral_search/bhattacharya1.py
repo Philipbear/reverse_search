@@ -24,6 +24,48 @@ import numba as nb
 import numpy as np
 
 
+def bhattacharya1_similarity(qry_spec: np.ndarray, ref_spec: np.ndarray,
+                             tolerance: float = 0.1,
+                             min_matched_peak: int = 1,
+                             penalty: float = 0.):
+    """
+    Calculate similarity between two spectra.
+
+    Parameters
+    ----------
+    qry_spec: np.ndarray
+        Query spectrum.
+    ref_spec: np.ndarray
+        Reference spectrum.
+    tolerance: float
+        Tolerance for m/z matching.
+    min_matched_peak: int
+        Minimum number of matched peaks.
+    penalty: float
+        Penalty for unmatched peaks. If set to 0, traditional cosine score; if set to 1, traditional reverse cosine score.
+    """
+    tolerance = np.float32(tolerance)
+    penalty = np.float32(penalty)
+
+    if qry_spec.size == 0 or ref_spec.size == 0:
+        return 0.0, 0
+
+    # normalize the intensity
+    ref_spec[:, 1] /= np.sum(ref_spec[:, 1])
+    qry_spec[:, 1] /= np.sum(qry_spec[:, 1])
+
+    matches_idx1, matches_idx2 = collect_peak_pairs(
+        ref_spec, qry_spec, min_matched_peak, tolerance
+    )
+
+    if len(matches_idx1) == 0:
+        return 0.0, 0
+
+    return score_matches(
+        matches_idx1, matches_idx2, ref_spec, qry_spec, penalty
+    )
+
+
 @nb.njit
 def find_matches(ref_spec_mz: np.ndarray, qry_spec_mz: np.ndarray,
                  tolerance: float) -> Tuple[np.ndarray, np.ndarray]:
@@ -130,49 +172,9 @@ def score_matches(matches_idx1: np.ndarray, matches_idx2: np.ndarray,
     return min(float(score), 1.0), used_matches
 
 
-def bhattacharya1_similarity(qry_spec: np.ndarray, ref_spec: np.ndarray,
-                             tolerance: float = 0.1,
-                             min_matched_peak: int = 1,
-                             penalty: float = 0.):
-    """
-    Calculate similarity between two spectra.
-
-    Parameters
-    ----------
-    qry_spec: np.ndarray
-        Query spectrum.
-    ref_spec: np.ndarray
-        Reference spectrum.
-    tolerance: float
-        Tolerance for m/z matching.
-    min_matched_peak: int
-        Minimum number of matched peaks.
-    penalty: float
-        Penalty for unmatched peaks. If set to 0, traditional cosine score; if set to 1, traditional reverse cosine score.
-    """
-    tolerance = np.float32(tolerance)
-    penalty = np.float32(penalty)
-
-    if qry_spec.size == 0 or ref_spec.size == 0:
-        return 0.0, 0
-
-    # normalize the intensity
-    ref_spec[:, 1] /= np.sum(ref_spec[:, 1])
-    qry_spec[:, 1] /= np.sum(qry_spec[:, 1])
-
-    matches_idx1, matches_idx2 = collect_peak_pairs(
-        ref_spec, qry_spec, min_matched_peak, tolerance
-    )
-
-    if len(matches_idx1) == 0:
-        return 0.0, 0
-
-    return score_matches(
-        matches_idx1, matches_idx2, ref_spec, qry_spec, penalty
-    )
-
-
 if __name__ == "__main__":
+
+    # Example usage
     peaks1 = np.array([[69, 8.0], [86, 100.0], [99, 50.0]], dtype=np.float32)
 
     peaks2 = np.array([[41, 38.0], [69, 66.0], [86, 999.0]], dtype=np.float32)
