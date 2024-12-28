@@ -247,7 +247,3 @@ if __name__ == "__main__":
     # Example with traditional reverse entropy
     score, n_matches = entropy_similarity(peaks1, peaks2, tolerance=0.05, penalty=1)
     print(f"Reverse Score: {score:.3f}, Matches: {n_matches}")
-
-    # Example with enhanced reverse entropy, analog search
-    score, n_matches = entropy_similarity(peaks1, peaks2, tolerance=0.05, penalty=0.6, shift=10)
-    print(f"Reverse Score: {score:.3f}, Matches: {n_matches}")

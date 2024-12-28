@@ -210,7 +210,3 @@ if __name__ == "__main__":
     # Example with traditional reverse cosine
     score, n_matches = cosine_similarity(peaks1, peaks2, tolerance=0.05, sqrt_transform=True, penalty=1)
     print(f"Reverse Score: {score:.3f}, Matches: {n_matches}")
-
-    # Example with enhanced reverse cosine, analog search
-    score, n_matches = cosine_similarity(peaks1, peaks2, tolerance=0.05, sqrt_transform=True, penalty=0.6, shift=10)
-    print(f"Reverse Score: {score:.3f}, Matches: {n_matches}")
