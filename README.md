@@ -3,7 +3,7 @@
 Chimeric spectra are ubiquitous in MS/MS data, which compromises the quality and reliability of MS/MS matching-based metabolite annotation.
 Reverse spectral search is a simple yet overlooked solution to chimeric spectra. 
 
-Here, we enhanced the reverse search by introducing a penalty factor to unmatched peaks, which substantially increases the number of spectral matches while maintaining rigorous quality control.
+Here, we enhanced the reverse search by introducing a penalty factor to unmatched peaks, which increases the number of spectral matches while maintaining rigorous quality control.
 
 <table>
 <tr>
@@ -13,7 +13,7 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
   <td width="60%" align="center">
     <img src="fig/chimera.svg" width="300"/>
     <br><br>
-    <img src="fig/annotation_cos.svg" width="400"/>
+    <img src="fig/annotation.svg" width="400"/>
   </td>
 </tr>
 </table>
@@ -31,8 +31,9 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 - GNPS ([ALL_GNPS_NO_PROPOGATED.mgf](https://gnps-external.ucsd.edu/gnpslibrary), downloaded on Jan 23, 2025)
 
 
-## Citation
-> Shipei Xing, Yasin El Abiead, Haoqi Nina Zhao, Vincent Charron-Lamoureux, Mingxun Wang, Pieter C. Dorrestein. Reverse spectral search: a simple but overlooked solution for chimeric spectra in metabolite annotation. To be preprinted.
+[//]: # (## Citation)
+
+[//]: # (> Shipei Xing, Yasin El Abiead, Haoqi Nina Zhao, Vincent Charron-Lamoureux, Mingxun Wang, Pieter C. Dorrestein. Reverse spectral search reimagined: a simple but overlooked solution for chimeric spectra annotation.)
 
 
 ## License
