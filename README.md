@@ -1,4 +1,4 @@
-# Reverse MS/MS spectral search
+# Reverse spectral search
 
 Chimeric spectra are ubiquitous in MS/MS data, which compromises the quality and reliability of MS/MS matching-based metabolite annotation.
 Reverse spectral search is a simple yet overlooked solution to chimeric spectra. 
