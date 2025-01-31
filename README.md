@@ -1,4 +1,6 @@
 # Reverse spectral search
+[![Developer](https://img.shields.io/badge/Developer-Shipei_Xing-orange?logo=github&logoColor=white)](https://scholar.google.ca/citations?user=en0zumcAAAAJ&hl=en)
+![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat&logo=apache)
 
 Chimeric spectra are ubiquitous in MS/MS data, which compromises the quality and reliability of MS/MS matching-based metabolite annotation.
 Reverse spectral search is a simple yet overlooked solution to chimeric spectra. 
@@ -28,7 +30,10 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 - Chimeric spectra analysis of public datasets: [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
 - Annotation codes: [`annotation` folder](https://github.com/Philipbear/reverse_MSMS_matching/tree/main/annotation)
 
-[//]: # (## Citation)
+
+## Citation
+If you use this code, please cite this GitHub repository:
+> Shipei Xing. Reverse spectral search. GitHub repository, 2024. URL: https://github.com/Philipbear/reverse_search
 
 [//]: # (> Shipei Xing, Yasin El Abiead, Haoqi Nina Zhao, Vincent Charron-Lamoureux, Mingxun Wang, Pieter C. Dorrestein. Reverse spectral search reimagined: a simple but overlooked solution for chimeric spectra annotation.)
 
