@@ -32,7 +32,7 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 
 
 ## Citation
-If you use this code, please cite this GitHub repository:
+If you use the code from this repository, please cite:
 > Shipei Xing. Reverse spectral search. GitHub repository, 2024. URL: https://github.com/Philipbear/reverse_search
 
 [//]: # (> Shipei Xing, Yasin El Abiead, Haoqi Nina Zhao, Vincent Charron-Lamoureux, Mingxun Wang, Pieter C. Dorrestein. Reverse spectral search reimagined: a simple but overlooked solution for chimeric spectra annotation.)
