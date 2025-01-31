@@ -27,8 +27,8 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 - Bhattacharyya angle: [`bhattacharya1.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/bhattacharya1.py)
 
 ## Analysis codes
-- Chimeric spectra analysis of public datasets: [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
-- Annotation codes: [`annotation` folder](https://github.com/Philipbear/reverse_MSMS_matching/tree/main/annotation)
+- Chimeric spectra analysis of public datasets: [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_search/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
+- Annotation codes: [`annotation` folder](https://github.com/Philipbear/reverse_search/tree/main/annotation)
 
 
 ## Citation
