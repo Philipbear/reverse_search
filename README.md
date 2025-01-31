@@ -22,9 +22,9 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 
 
 ## Symmetric & reverse spectral search
-- Cosine similarity: [`cosine.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/cosine.py)
-- Entropy similarity: [`entropy.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/entropy.py)
-- Bhattacharyya angle: [`bhattacharya1.py`](https://github.com/Philipbear/reverse_MSMS_matching/blob/main/reverse_spectral_search/bhattacharya1.py)
+- Cosine similarity: [`cosine.py`](https://github.com/Philipbear/reverse_search/blob/main/reverse_spectral_search/cosine.py)
+- Entropy similarity: [`entropy.py`](https://github.com/Philipbear/reverse_search/blob/main/reverse_spectral_search/entropy.py)
+- Bhattacharyya angle: [`bhattacharya1.py`](https://github.com/Philipbear/reverse_search/blob/main/reverse_spectral_search/bhattacharya1.py)
 
 ## Analysis codes
 - Chimeric spectra analysis of public datasets: [`analyze_chimeric_spec.py`](https://github.com/Philipbear/reverse_search/blob/main/chimeric_spectra/analyze_chimeric_spec.py)
