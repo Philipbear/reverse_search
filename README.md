@@ -14,7 +14,7 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
   </td>
   <td width="60%" align="center">
     <img src="fig/rev_search.svg" width="450"/>
-    <img src="fig/annotation.svg" width="500" style="margin-top: -20px;"/>
+    <img src="fig/annotation.svg" width="550" style="margin-top: -20px;"/>
   </td>
 </tr>
 </table>
