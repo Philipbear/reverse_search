@@ -13,8 +13,8 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
     <img src="fig/workflow.svg" width="300"/>
   </td>
   <td width="60%" align="center">
-    <img src="fig/chimera.svg" width="300"/>
-    <br><br>
+    <img src="fig/chimera.svg" width="350"/>
+    <img src="fig/rev_search.svg" width="350"/>
     <img src="fig/annotation.svg" width="400"/>
   </td>
 </tr>
