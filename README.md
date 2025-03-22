@@ -9,10 +9,10 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 
 <table>
 <tr>
-  <td width="40%" align="center" valign="center">
+  <td width="35%" align="center" valign="center">
     <img src="fig/workflow.svg" width="300"/>
   </td>
-  <td width="60%" align="center">
+  <td width="65%" align="center">
     <img src="fig/rev_search.svg" width="450"/>
     <img src="fig/annotation.svg" width="550" style="margin-top: -20px;"/>
   </td>
