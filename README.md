@@ -32,6 +32,7 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 
 ## Citation
 Our paper:
+
 [//]: # (> Shipei Xing, Vincent Charron-Lamoureux, Haoqi Nina Zhao, Yasin El Abiead, Mingxun Wang, Pieter C. Dorrestein. [Reverse Spectral Search Reimagined: A Simple but Overlooked Solution for Chimeric Spectral Annotation.](https://pubs.acs.org/doi/10.1021/acs.analchem.5c02047) Analytical Chemistry, 2025.)
 
 If you use the code from this repository, please cite:
