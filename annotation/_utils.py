@@ -84,3 +84,17 @@ def remove_electronic_noise_peaks(peaks: np.ndarray, min_group_size: int = 5) ->
             cutoff_intensity = peak_group[-1]
 
     return peaks[peaks[:, 1] > cutoff_intensity]
+
+
+from dataclasses import dataclass
+import numpy as np
+
+@dataclass
+class Spectrum:
+    scan: int
+    precursor_mz: float
+    rt: float
+    charge: int
+    peaks: np.ndarray
+    peaks_cleaned: bool = False
+    tic: float = 0.0

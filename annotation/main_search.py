@@ -45,7 +45,13 @@ def main_batch(gnps_lib_mgf, qry_file,
     # Some preprocessing
     qry_file_name = os.path.basename(qry_file)
     qry_basename = os.path.basename(qry_file).split('_iimn')[0]
-    out_path = os.path.join(algorithm, f"{qry_basename}_matches.tsv")
+    
+    if algorithm.startswith('rev_') and unmatched_penalty_factor == 1.0:
+        # traditional reverse cosine similarity
+        out_folder = 'traditional_' + algorithm
+        out_path = os.path.join(out_folder, f"{qry_basename}_matches.tsv")
+    else:
+        out_path = os.path.join(algorithm, f"{qry_basename}_matches.tsv")
 
     min_matched_peak = max(min_matched_peak, 1)
 
@@ -115,7 +121,7 @@ def main_batch(gnps_lib_mgf, qry_file,
                     'qry_scan': qry_spec.scan,
                     'qry_mz': qry_spec.precursor_mz,
                     'qry_rt': qry_spec.rt,
-                    'score': score,
+                    'score': round(score, 4),
                     'peaks': n_matches,
                     'mass_diff': qry_spec.precursor_mz - spec['PEPMASS'],
                     'ref_mz': spec['PEPMASS'],
@@ -130,121 +136,174 @@ def main_batch(gnps_lib_mgf, qry_file,
 
 
 if __name__ == "__main__":
+    import os
+    
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     os.makedirs('cos', exist_ok=True)
     os.makedirs('rev_cos', exist_ok=True)
+    os.makedirs('traditional_rev_cos', exist_ok=True)
     os.makedirs('entropy', exist_ok=True)
     os.makedirs('rev_entropy', exist_ok=True)
+    os.makedirs('traditional_rev_entropy', exist_ok=True)
 
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/marine_DOM_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/marine_DOM_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/marine_DOM_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/marine_DOM_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/marine_DOM_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/soil_DOM_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/soil_DOM_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/soil_DOM_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/soil_DOM_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/soil_DOM_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_urine_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_urine_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_urine_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_urine_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_feces_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_feces_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_feces_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_feces_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_liver_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_liver_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_liver_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_liver_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_brain_iimn_fbmn.mgf',
+    #            algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_brain_iimn_fbmn.mgf',
+    #            algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_brain_iimn_fbmn.mgf',
-               algorithm='cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_brain_iimn_fbmn.mgf',
-               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=0.6)
+               algorithm='rev_cos', peak_transformation='sqrt', unmatched_penalty_factor=1.0)
 
     ##############################################################################################################
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/marine_DOM_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/marine_DOM_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/marine_DOM_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/marine_DOM_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/soil_DOM_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/soil_DOM_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/soil_DOM_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/soil_DOM_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_urine_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_urine_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_urine_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_urine_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_feces_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_feces_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_feces_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_feces_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_liver_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_liver_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_liver_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_liver_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_embryo_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_placenta_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)
 
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_brain_iimn_fbmn.mgf',
+    #            algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+    # main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
+    #            'mzmine_output/mouse_brain_iimn_fbmn.mgf',
+    #            algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
     main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
                'mzmine_output/mouse_brain_iimn_fbmn.mgf',
-               algorithm='entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
-    main_batch('ALL_GNPS_NO_PROPOGATED.mgf',
-               'mzmine_output/mouse_brain_iimn_fbmn.mgf',
-               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=0.6)
+               algorithm='rev_entropy', peak_transformation='none', unmatched_penalty_factor=1.0)

@@ -64,7 +64,7 @@ def process_mzml(mzml_file):
                 precursor_mz = float(
                     spectrum['precursorList']['precursor'][0]['selectedIonList']['selectedIon'][0]['selected ion m/z'])
 
-                if ms1_peaks is not None:
+                if ms1_peaks is not None and precursor_mz is not None:
                     ion_count, prec_purity = _analyze_ms1(ms1_peaks, precursor_mz)
                     ion_count_ls.append(ion_count)
                     prec_purity_ls.append(prec_purity)
