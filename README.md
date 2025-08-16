@@ -31,11 +31,11 @@ Here, we enhanced the reverse search by introducing a penalty factor to unmatche
 
 
 ## Citation
+Our paper:
+[//]: # (> Shipei Xing, Vincent Charron-Lamoureux, Haoqi Nina Zhao, Yasin El Abiead, Mingxun Wang, Pieter C. Dorrestein. [Reverse Spectral Search Reimagined: A Simple but Overlooked Solution for Chimeric Spectral Annotation.](https://pubs.acs.org/doi/10.1021/acs.analchem.5c02047) Analytical Chemistry, 2025.)
+
 If you use the code from this repository, please cite:
 > Shipei Xing. Reverse spectral search. GitHub repository, 2024. URL: https://github.com/Philipbear/reverse_search
-
-[//]: # (> Shipei Xing, Yasin El Abiead, Haoqi Nina Zhao, Vincent Charron-Lamoureux, Mingxun Wang, Pieter C. Dorrestein. Reverse spectral search reimagined: a simple but overlooked solution for chimeric spectra annotation.)
-
 
 ## License
 This project is licensed under the Apache 2.0 License (Copyright 2024 Shipei Xing).
